@@ -1,0 +1,67 @@
+#edit-mode: -*- python -*-
+#coding:utf-8
+
+import os
+import sys
+
+PACKAGE_GTEST = '/home/chenkang/chenkang02/com/btest/gtest/output'
+CFLAGS('-g -pipe -W -Wall -fPIC')
+CXXFLAGS(('-g -O3 -pipe -W -Wall -Wextra -fPIC -pthread -std=c++11 -Wno-parentheses')
+        + (' -Wno-literal-suffix -Wno-unused-parameter -Wno-unused-local-typedefs'))
+
+INCPATHS(('.')
+        + (' %s/include/' % (PACKAGE_GTEST)))
+
+LDFLAGS(('-L %s/lib' % (PACKAGE_GTEST))
+        + (' -pthread')
+        + (' -lgtest -lgtest_main'))
+
+user_sources = 'parse_helper.cpp common.cpp fs_reader.cpp table_parser.cpp'
+user_headers = 'parse_helper.h common.h fs_reader.h table_parser.h'
+
+StaticLibrary('table_parser', 
+        Sources(user_sources),
+        HeaderFiles(user_headers)
+)
+
+Application('example1',
+        Sources('./examples/example1.cpp'),
+        Depends('libtable_parser.a'),
+        Libraries('libtable_parser.a'),
+        OutputPath('./examples')
+)
+
+Application('example2',
+        Sources('./examples/example2.cpp'),
+        Depends('libtable_parser.a'),
+        Libraries('libtable_parser.a'),
+        OutputPath('./examples')
+)
+
+Application('table_parser_test',
+        Sources('./tests/test_parse_helper.cpp'),
+        Depends('libtable_parser.a'),
+        Libraries('libtable_parser.a'),
+        OutputPath('./tests')
+)
+
+Application('common_test',
+        Sources('./tests/test_common.cpp'),
+        Depends('libtable_parser.a'),
+        Libraries('libtable_parser.a'),
+        OutputPath('./tests')
+)
+
+Application('fs_reader_test',
+        Sources('./tests/test_fs_reader.cpp'),
+        Depends('libtable_parser.a'),
+        Libraries('libtable_parser.a'),
+        OutputPath('./tests')
+)
+
+Application('table_parser_test',
+        Sources('./tests/test_table_parser.cpp'),
+        Depends('libtable_parser.a'),
+        Libraries('libtable_parser.a'),
+        OutputPath('./tests')
+)
